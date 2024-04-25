@@ -1,0 +1,157 @@
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-image: url(../imagens/backgroundabstrato.jpg);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*CONFIG CONTAINER*/
+
+
+.box {
+    width: 80%;
+    display: flex;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+/*CONFIGS FORMULÁRIO*/
+
+.form-img {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFF;
+}
+
+.form-img img {
+    width: 31rem;
+    height: 100%;
+}
+
+.form {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: #FFF;
+    padding: 30px;
+}
+
+
+/*CONFIG DOS INPUTS DO FORMS*/
+
+
+.form label{
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.input-box {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+.input-box input {
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    box-shadow: 1px 1px 6px #0000001e;
+}
+
+.input-box input:focus-visible {
+    outline: 1px solid blue;
+}
+
+/*INPUTS DE GÊNERO*/
+
+.genero-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.input-genero h6 {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+/*Personalização do botão cadastrar*/
+
+.btn-cadastrar button{
+    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    background: #0275FF;
+    color: #Fff;
+    text-transform: uppercase;
+    font-weight: bolder;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    
+}
+
+/*Mensagem de validação*/
+.span-required {
+    display: none;
+    margin-top: 5px;
+    color: red;
+    font-size: 12px;
+}
+
+.quebrar-span {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/*-------- Media queries --------*/
+
+/*Para dispositivos Tablets/Médios*/
+@media screen and (max-width: 1000px){
+    .form-img{
+        display: none;
+    }
+
+    .form {
+        width: 100%;
+    }
+
+    .input-group{
+        flex-direction: column;
+    }
+}
+
+/*Para dispositivos menores*/
+@media screen and (max-width: 620px){
+    .genero-group label {
+        font-size: 12px;
+    } 
+}
+
+/*Para dispositivos muito pequenos*/
+@media screen and (max-width: 420px) {
+    .genero-group {
+        flex-direction: column;
+    }
+
+    .form-titulo {
+        font-size: 10px;
+        text-align: center;
+    }
+}
+
