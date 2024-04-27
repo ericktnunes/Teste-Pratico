@@ -2,6 +2,7 @@
     if(isset($_POST['submit'])) {
 
         include_once('php/conexao.php');
+        session_start();
 
             $nome = $_POST['nome'];
             $data_nasc = $_POST['data_nasc'];
@@ -9,10 +10,26 @@
             $endereco = $_POST['endereco'];
             $genero = $_POST['sexo'];
 
-            $resultado = mysqli_query($conexao, "INSERT INTO pacientes(nome, data_nasc, genero, telefone, endereco) 
-            VALUES('$nome', '$data_nasc', '$genero', '$tel', '$endereco')");
-    }
+            $sql = "SELECT * FROM pacientes WHERE nome = '$nome' and data_nasc = '$data_nasc'";
+            $result = $conexao->query($sql);
 
+
+            if(mysqli_num_rows($result) < 1) 
+            {
+                $resultado = mysqli_query($conexao, "INSERT INTO pacientes(nome, data_nasc, genero, telefone, endereco) 
+                VALUES('$nome', '$data_nasc', '$genero', '$tel', '$endereco')");
+
+                $_SESSION['msg'] = "<p style = 'color:green;'>Cadastro realizado com sucesso</p>";
+            } 
+            else if (mysqli_num_rows($result) >= 1)
+            {
+                unset($_SESSION['nome']);
+                unset($_SESSION['data_nasc']);
+                unset($_SESSION['tel']);
+                $_SESSION['msg'] = "<p style = 'color:red;'>Já existe cadastro com esse usuário</p>";
+            }
+
+    } 
 ?>
 
 
@@ -24,7 +41,7 @@
     <title>Página de Cadastro</title>
 
     <!--Link css-->
-    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="stylesheet" href="css/estilo.css?v=<?= time() ?>" >
 
 </head>
 <body>
@@ -42,35 +59,49 @@
                     <h1>Cadastre-se</h1>
                 </div>
 
+                <!--Aqui estou chamando no HTML a mensagem, caso o cadastro seja confirmado-->
+                <?php
+                    if(isset($_SESSION['msg'])){
+                        echo $_SESSION['msg'];
+                        unset($_SESSION['msg']);
+                    } 
+                
+                    if(isset($_SESSION['msg'])){
+                        echo $_SESSION['msg'];
+                        unset($_SESSION['msg']);
+                        header("Location: index.php");
+                    }
+                ?> <!--E aqui estou chamando o cadastro já exista-->
+
                 <!--Grupo de inputs-->
                 <div class="input-group">
                     <div class="input-box">
                         <label for="nome">Nome completo:</label>
-                        <input type="text" name="nome" id="nome" class="required" placeholder="Fulano..." required oninput="validarNome()">
+                        <input type="text" name="nome" id="nome" class="required" required oninput="validarNome()">
                         <span class="span-required">Nome tem que ter 3 ou mais caracteres!</span>
                     </div>
                     <div class="input-box">
                         <label for="tel">Telefone:</label>
-                        <input type="tel" name="tel" id="tel" class="required" placeholder="(XX)XXXXX-XXXX" required maxlength="11" oninput="validarTel()">
-                        <span class="span-required quebrar-span">Incorreto! Coloque também o seu DDD!</span>
+                        <input type="tel" name="tel" id="tel" class="required" required placeholder="(XX)XXXXX-XXXX"  maxlength="11" oninput="validarTel()">
+                        <span class="span-required">Incorreto! Coloque também o seu DDD!</span>
                     </div>
                     <div class="input-box">
                         <label for="data_nasc">Data Nascimento:</label>
-                        <input type="date" name="data_nasc" id="data_nasc" class="required" required>
+                        <input type="date" name="data_nasc" id="data_nasc" required class="required" required>
                         <span class="span-required">Selecione sua data de nascimento</span>
                     </div>
                     <div class="input-box">
                         <label for="endereco">Endereço:</label>
-                        <input type="text" name="endereco" id="endereco" class="required" required oninput="validarEndereco()">
+                        <input type="text" name="endereco" id="endereco" required class="required" oninput="validarEndereco()">
                         <span class="span-required">Digite um endereço valido!</span>
                     </div>
                 </div>
 
                 <!--Input de Gênero-->
-                <div class="input-genero">
+                <div class="input-genero required">
                     <h6>Gênero: </h6>
-
-                    <div class="genero-group" required>
+                    <span class="span-required">Por favor, selecione o seu gênero!</span>
+                    <div class="genero-group">
                         <div class="genero-input">
                             <input type="radio" name="sexo" id="masc" value="masc">
                             <label for="masc">Masculino</label>
@@ -84,8 +115,8 @@
                             <label for="outros">Outros</label>
                         </div>
                         <div class="genero-input">
-                            <input type="radio" name="sexo" id="undefined" value="undefined">
-                            <label for="undefined">Prefiro não dizer</label>
+                            <input type="radio" name="sexo" id="nao_definido" value="nao_definido">
+                            <label for="nao_definido">Prefiro não dizer</label>
                         </div>
                     </div>
                 </div>
@@ -93,6 +124,10 @@
                 <!--Botão-->
                 <div class="btn-cadastrar">
                     <button type="submit" name="submit">Cadastrar</button>
+                </div>
+
+                <div class="link-cadastro-consulta">
+                    <p>Para consultar pacientes cadastrados,</p><li><a href="consultarclientes.php">clique aqui</a></li>
                 </div>
 
             </form>

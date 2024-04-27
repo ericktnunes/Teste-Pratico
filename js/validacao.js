@@ -8,12 +8,11 @@
     /*Esse código é somente uma verificação, aqui diz que se ocorrer o evento
     'submit', que seria clicar no botão de cadastrar, vão acontecer todas as verificações dos inputs, 
     que estão logo embaixo*/
-    /*form.addEventListener('submit', (event)=>{
-        event.preventDefault();
+    /*form.addEventListener('submit', function(event){
+        event.preventDefault(); // Evita o envio do formulário
         validarNome()
         validarTel()
         validarEndereco()
-
     });*/
 
 
@@ -24,9 +23,18 @@
         spans[index].style.display = 'block';
     }
 
+    function setErrorGenero(index) {
+        spans[index].style.display = 'block';
+    }
+
     /*E essa é a função para remover, caso aconteça a validação, essa é responsável por tirar
     tanto a borda de erro, quanto a mensagem do span, fazendo ele ter no css um 'display:none'*/
     function removeError(index){
+        campos[index].style.border = '';
+        spans[index].style.display = 'none';
+    }
+
+    function removeErrorGenero(index){
         campos[index].style.border = '';
         spans[index].style.display = 'none';
     }
@@ -55,15 +63,14 @@
         const formatarCelular = celular.split('');
 
 
-
-
         /*Logica para verificar se o array tem o tamanho de 11 caracteres, se tiver ele não
         ele mostra a mensagem de erro, se tiver, ele apaga a mensagem*/
         if(formatarCelular.length < 11) {
-            setError(1)
+            setError(1);
         } else {
-            removeError(1)
+            removeError(1);
         }
+    
         //console.log(formatarCelular)
         /*Esse consolelog era só pra testar se a lógica de transformar em array
         estava correta*/
@@ -79,5 +86,31 @@
             removeError(3);
         }
     }
+
+    /*Esse código é somente uma verificação, aqui diz que se ocorrer o evento
+    'submit', que seria clicar no botão de cadastrar, vai acontecer a verificação
+    dos campos de gênero, se tiver vazio, vai mostrar a mensagem de erro "setErrorGenero,
+    e não vai enviar o formulário."*/
+    form.addEventListener('submit', function(evento) {
+        const radios = document.querySelectorAll('.genero-group input[type="radio"]'); //Pega todos os inputs radio('masculino', 'feminino', 'outros', 'prefiro nao dizer')
+        let selecionado = false;
+
+
+        //Passa por cada input radio usando o loop for
+        for (const radio of radios) {
+            if (radio.checked) {
+                selecionado = true;
+                break;
+            }
+        }
+
+        //se o selecionado for falso, ele vai dar o erro e não envia o formulário
+        if (!selecionado) {
+            evento.preventDefault(); // Evita o envio do formulário
+            setErrorGenero(4);
+        } else {
+            removeErrorGenero(4); //se for true, vai remover o erro e deixar o formulário ser enviado.
+        }
+    });
 
 
