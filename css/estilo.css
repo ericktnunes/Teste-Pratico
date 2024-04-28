@@ -167,6 +167,7 @@ body {
 
 /*-------- Media queries --------*/
 
+/*Dispostivos grandes, acima de 1001px*/
 @media screen and (min-width: 1001px){
     .input-box2 {
         display: flex;
@@ -204,6 +205,10 @@ body {
     .genero-group label {
         font-size: 12px;
     } 
+
+    .link-cadastro-consulta p, .link-cadastro-consulta a{
+        font-size: 13px;
+    }
 }
 
 /*Para dispositivos muito pequenos*/
@@ -221,5 +226,10 @@ body {
         font-size: 11px;
         width: 200px;
     }
+
+    .link-cadastro-consulta p, .link-cadastro-consulta a{
+        font-size: 10px;
+    }
+    
 }
 

@@ -1,21 +1,42 @@
 <?php
+    /*Nesse if, a função 'isset' é usada para verificar se a variavel existe, nesse caso
+    ele verificará se existe a função de $_POST['submit'], que seria o clique do usuário 
+    no botão de consultar pacientes.*/ 
     if(isset($_POST['submit'])) {
 
-        include_once('php/conexao.php');
-        session_start();
+        include_once('php/conexao.php'); //incluindo o arquivo de conexão com o bancco de dados
+        session_start();  //iniciando uma sessão, para gerenciar sessões de usuários
 
+            //atríbuo a variavel '$nome', o valor digitado pelo usuario no input 'nome' no HTML
             $nome = $_POST['nome'];
 
-            $sql = "SELECT * FROM pacientes WHERE nome = '$nome'";
-            $resultado = $conexao->query($sql);
+            //criando variavel para fazer consulta no banco de dados
+            $sql = "SELECT * FROM pacientes WHERE nome = ?"; //Uso o "?" pois irei tratar o SQL Injection
+
+            /*Como forma de segurança para combater o SQL Injection, eu usei funções myqsli do PHP
+            que evitam com que seja usados métodos injection*/
+            $stmt = $conexao->prepare($sql); //Crio a variavel '$stmt' e uso a função de preparar a query SQL  
+            $stmt->bind_param('s', $nome);  //Aqui envio a variavel, para verificar se tem caracteres maliciosos, no caso a variavel '$nome'
+            $stmt->execute(); //Função para executar a consulta
+            $resultado = $stmt->get_result(); //Atribuo o resultado consultado para a variavel '$resultado'
+            $stmt->close(); //Fechei a declaração como boa prática
+
                    
     } else {
+            /*Esse else está aqui, pois se não existisse clique no  botão de pesquisar
+            estava aparecendo a mensagem 'não existe cadastro com esse nome' e dando erro 
+            de consulta na aplicação."*/
             include_once('php/conexao.php');
             session_start();
 
-            $nome = "";
-            $sql = "SELECT * FROM pacientes WHERE nome = '$nome'";
-            $resultado = $conexao->query($sql);
+            //criando variavel para fazer consulta no banco de dados
+            $sql = "SELECT * FROM pacientes WHERE nome = ?";
+
+            $stmt = $conexao->prepare($sql);
+            $stmt->bind_param('s', $nome);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $stmt->close();
     }
 ?>
 
@@ -65,7 +86,10 @@
                     <thead>
                         <tr class="linhaprincipal">
                             <?php
-                            if(mysqli_num_rows($resultado) >=1){
+                            /*Se o resultado da consulta der numero de linhas > 0, significa
+                            que existe um cadastro com o nome digitado pelo usuário, ai eu retorno
+                            com a criação dos títulos da tabela.*/
+                            if($resultado->num_rows > 0){
                                 echo "<th>Nome</th>";
                                 echo "<th>Data de nascimento</th>";
                                 echo "<th>Telefone</th>";
@@ -76,16 +100,25 @@
 
                     <tbody>
                             <?php 
+                                //Se existir clique no botão de pesquisar
                                 if(isset($_POST['submit'])){
-                                    if(mysqli_num_rows($resultado) >= 1){
-                                        while($paciente = mysqli_fetch_assoc($resultado)){
+                                    if($resultado->num_rows > 0){
+                                        /*Se o resultado da consulta der numero de linhas > 0, significa
+                                        que existe um cadastro com o nome digitado pelo usuário, ai eu retorno
+                                        com um While, que irá printar na tela, os pacientes digitado pelo usuário
+                                        com sua respectiva data de nascimento e telefone*/
+                                        while($paciente = $resultado->fetch_object()){
+                                            //A função fetch_object busca uma linha de dados do conjunto de resultados e a retorna como um objeto.
                                             echo "<tr>";
-                                            echo ("<td style='border-right: 1px solid #DEDEDE; text-align: center;'>" . $paciente['nome']."</td>");
-                                            echo ("<td style='border-right: 1px solid #DEDEDE; text-align: center;'>" . $paciente['data_nasc']."</td>");
-                                            echo ("<td>" . $paciente['telefone']."</td>");
+                                            echo ("<td style='border-right: 1px solid #DEDEDE; text-align: center;'>" . $paciente->nome."</td>");
+                                            echo ("<td style='border-right: 1px solid #DEDEDE; text-align: center;'>" . $paciente->data_nasc."</td>");
+                                            echo ("<td>" . $paciente->telefone."</td>");
                                             echo "</tr>";
                                         }  
                                     } else {
+                                        /*Caso o resultado da conuslta der numero de linhas < 0, significa que 
+                                        não existe um cadastro com o nome digitado pelo usuário, ai eu dou um print
+                                        na tela dizendo que 'não existe um cadastro com esse nome'*/
                                         echo "<tr>";
                                         echo "<td style='color: red;'>Não existe cadastro com esse nome!</td>";
                                         echo "</tr>";
@@ -105,6 +138,7 @@
                   
 
     </div> <!--Fim Box principal-->
+    
 </body>
 
 

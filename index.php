@@ -1,28 +1,48 @@
 <?php
+    /*Nesse if, a função 'isset' é usada para verificar se a variavel existe, nesse caso
+    ele verificará se existe a função de $_POST['submit'], que seria o clique do usuário 
+    no botão cadastrar para envio do formulário.*/ 
     if(isset($_POST['submit'])) {
 
-        include_once('php/conexao.php');
-        session_start();
+        include_once('php/conexao.php'); //incluindo o arquivo de conexão com o bancco de dados
+        session_start(); //iniciando uma sessão, para gerenciar sessões de usuários
 
+            /*Aqui eu crio variaveis e dou o seu valor com base no que foi digitado pelo usuário,
+            como por exemplo, o que foi digitado no input 'nome' do html, será atribuído a variável
+            '$nome'. Estou fazendo essa atribuição para as variáveis para mais tarde inseri-las no 
+            banco de dados*/
             $nome = $_POST['nome'];
             $data_nasc = $_POST['data_nasc'];
             $tel = $_POST['tel'];
             $endereco = $_POST['endereco'];
             $genero = $_POST['sexo'];
 
+            //criando variavel para fazer consulta no banco de dados
             $sql = "SELECT * FROM pacientes WHERE nome = '$nome' and data_nasc = '$data_nasc'";
+
+            /*aqui eu faço uma query (uma solicitação/consulta ao banco de dados), com o valor 
+            da variavel que criei($sql)*/
             $result = $conexao->query($sql);
 
-
+            /*Esse if verificará, a consulta que fiz com a query, se a quantidade de linhas < 1,
+            calculado pela função 'mysqli_num_rows', quer dizer que aquele consulta não existe no 
+            banco de dados.*/
             if(mysqli_num_rows($result) < 1) 
             {
+                /*Com a informação de que não existe no banco de dados, eu insiro as informações digitadas
+                pelo usuário ao banco de dados. Fazendo com que assim não tenha uma superlotação de dados 
+                idênticos no banco de dados*/ 
                 $resultado = mysqli_query($conexao, "INSERT INTO pacientes(nome, data_nasc, genero, telefone, endereco) 
                 VALUES('$nome', '$data_nasc', '$genero', '$tel', '$endereco')");
 
                 $_SESSION['msg'] = "<p style = 'color:green;'>Cadastro realizado com sucesso</p>";
             } 
+
+            /*Se a quantiadade de linhas for >= 1, significa que existem aqueles dados no banco, então eu 
+            não insiro os dados no banco de dados, e informo pro usuário que esse cadastro já existe*/
             else if (mysqli_num_rows($result) >= 1)
             {
+                //unset para destruir/apagar o valor atribuído para a variável
                 unset($_SESSION['nome']);
                 unset($_SESSION['data_nasc']);
                 unset($_SESSION['tel']);
@@ -69,7 +89,7 @@
                     if(isset($_SESSION['msg'])){
                         echo $_SESSION['msg'];
                         unset($_SESSION['msg']);
-                        header("Location: index.php");
+                        header("Location: index.php"); //Redireciono o usuário para a mesma página
                     }
                 ?> <!--E aqui estou chamando o cadastro já exista-->
 

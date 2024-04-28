@@ -1,19 +1,8 @@
 
-
+    //Declarao das variaveis para futuramente fazer a validação
     const form = document.getElementById('form');
     const campos = document.querySelectorAll('.required');
     const spans = document.querySelectorAll('.span-required');
-
-
-    /*Esse código é somente uma verificação, aqui diz que se ocorrer o evento
-    'submit', que seria clicar no botão de cadastrar, vão acontecer todas as verificações dos inputs, 
-    que estão logo embaixo*/
-    /*form.addEventListener('submit', function(event){
-        event.preventDefault(); // Evita o envio do formulário
-        validarNome()
-        validarTel()
-        validarEndereco()
-    });*/
 
 
     /*Função para implementar erro, ela pega os campos em forma de array, e aplica borda
