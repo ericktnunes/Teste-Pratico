@@ -61,7 +61,7 @@
     <title>Página de Cadastro</title>
 
     <!--Link css-->
-    <link rel="stylesheet" href="css/estilo.css?v=<?= time() ?>" >
+    <link rel="stylesheet" href="css/estilo.css" >
 
 </head>
 <body>
