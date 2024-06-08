@@ -10,8 +10,12 @@
             //atríbuo a variavel '$nome', o valor digitado pelo usuario no input 'nome' no HTML
             $nome = $_POST['nome'];
 
+            //Adicionando variável Like para nomes compostos, serem pesquisados no banco de dados
+            //Por exemplo, se o cliente pesquisar "Erick", aparecerá quem tem o nome "Erick Tavares"
+            $nome = "%" . $nome . "%";
+
             //criando variavel para fazer consulta no banco de dados
-            $sql = "SELECT * FROM pacientes WHERE nome = ?"; //Uso o "?" pois irei tratar o SQL Injection
+            $sql = "SELECT * FROM pacientes WHERE nome LIKE ?"; //Uso o "?" pois irei tratar o SQL Injection
 
             /*Como forma de segurança para combater o SQL Injection, eu usei funções myqsli do PHP
             que evitam com que seja usados métodos injection*/
